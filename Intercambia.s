@@ -47,6 +47,8 @@ Intercambiar:
 
 
 
+	# Deshacemos
+	
 	popl %esi
 	popl %ebx
 	movl %ebp, %esp
