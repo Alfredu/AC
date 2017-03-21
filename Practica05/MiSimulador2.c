@@ -101,8 +101,11 @@ void reference (unsigned int address)
 			replacement = false;
 		}
 		else{
+			/*Si habiamos usado la via 1 recientemente
+			toca usar la 0 y viceversa*/
 			via_mc = 1 - cache[conj_mc].lastUsed;
 			cache[conj_mc].lastUsed = via_mc;
+
 			miss = true;
 			replacement = true;
 			tag_out = cache[conj_mc].via[via_mc].tag;
