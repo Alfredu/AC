@@ -3,13 +3,16 @@
 /* Posa aqui les teves estructures de dades globals
  * per mantenir la informacio necesaria de la cache
  * */
+ struct{
+	int tag; //Almacenamos aquÃ­ el tag de cada linia de cache
+	char[32] contenido; //aqui estaran los datos de la cache;
+ } linea;
 
-
-
+linea[128] cache; //Nuestra cache serÃ¡ un array de 128 lineas. 4k / 32 bytes/linea = 128 lineas;
 
 /* La rutina init_cache es cridada pel programa principal per
  * inicialitzar la cache.
- * La cache es inicialitzada al començar cada un dels tests.
+ * La cache es inicialitzada al comenï¿½ar cada un dels tests.
  * */
 void init_cache ()
 {
@@ -28,8 +31,8 @@ void reference (unsigned int address)
 	unsigned int linea_mc;
 	unsigned int tag;
 	unsigned int miss;	   // boolea que ens indica si es miss
-	unsigned int replacement;  // boolea que indica si es reemplaça una linia valida
-	unsigned int tag_out;	   // TAG de la linia reemplaçada
+	unsigned int replacement;  // boolea que indica si es reemplaï¿½a una linia valida
+	unsigned int tag_out;	   // TAG de la linia reemplaï¿½ada
 	float t1,t2;		// Variables per mesurar el temps (NO modificar)
 	
 	t1=GetTime();
@@ -51,7 +54,7 @@ void reference (unsigned int address)
 
 	/* La funcio test_and_print escriu el resultat de la teva simulacio
 	 * per pantalla (si s'escau) i comproba si hi ha algun error
-	 * per la referencia actual. També mesurem el temps d'execució
+	 * per la referencia actual. Tambï¿½ mesurem el temps d'execuciï¿½
 	 * */
 	t2=GetTime();
 	totaltime+=t2-t1;
