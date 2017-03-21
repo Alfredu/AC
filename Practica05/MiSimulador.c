@@ -1,15 +1,19 @@
 #include "CacheSim.h"
 
+//Escrito por Aleix Sanchis i Nicolás Francisquelo. 
+
 /* Posa aqui les teves estructures de dades globals
  * per mantenir la informacio necesaria de la cache
  * */
- struct{
-	int tag; //Almacenamos aquí el tag de cada linia de cache
-	char[32] contenido; //aqui estaran los datos de la cache;
- } linea;
+ struct t_linea{
+	unsigned int tag; //Almacenamos aquí el tag de cada linia de cache
+	char valid; //Para saber si el contenido de la linea es valido;
+ };
 
-linea[128] cache; //Nuestra cache será un array de 128 lineas. 4k / 32 bytes/linea = 128 lineas;
-
+struct t_linea cache[128]; //Nuestra cache será un array de 128 lineas. 4k / 32 bytes/linea = 128 lineas;
+/*
+	
+*/
 /* La rutina init_cache es cridada pel programa principal per
  * inicialitzar la cache.
  * La cache es inicialitzada al comen�ar cada un dels tests.
@@ -18,8 +22,10 @@ void init_cache ()
 {
     totaltime=0.0;
 	/* Escriu aqui el teu codi */
-
-
+	int i;
+	for(i=0; i<128;i++){
+		cache[i].valid = false;
+	}
 
 }
 
@@ -38,7 +44,30 @@ void reference (unsigned int address)
 	t1=GetTime();
 	/* Escriu aqui el teu codi */
 
+	tag = (address & 0xFFFFF000)>>12; //Hacemos la mascara y shifteamos para cojer el TAG
+	linea_mc = (address & 0xFE0)>>5; //Lo mismo para la linea
+	byte = (address & 0x1F); //Y para el offset dentro de la linea;
 
+	bloque_m = address>>5;/*El bloque de memoria es la direccion menos
+							los bits de byte*/
+
+	struct t_linea linia = cache[linea_mc];
+	if(linia.tag == tag && linia.valid == true){ //si hay hit...
+		miss = false;
+		replacement = false;
+	}
+	else{
+		miss = true;
+		if(linia.valid == true){ //Si reemplazamos una linia valida
+			replacement = true;
+			tag_out = linia.tag;
+		}
+		else{
+			replacement = false;
+		}
+		cache[linea_mc].tag = tag;
+		cache[linea_mc].valid = true;
+	}
 
 
 
