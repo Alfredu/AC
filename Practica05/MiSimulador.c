@@ -1,5 +1,5 @@
 #include "CacheSim.h"
-
+#include <stdio.h>
 //Escrito por Aleix Sanchis i Nicolás Francisquelo. 
 
 /* Posa aqui les teves estructures de dades globals
@@ -10,16 +10,17 @@
 	char valid; //Para saber si el contenido de la linea es valido;
  };
 
+ int h; int m;
+
 struct t_linea cache[128]; //Nuestra cache será un array de 128 lineas. 4k / 32 bytes/linea = 128 lineas;
-/*
-	
-*/
+
 /* La rutina init_cache es cridada pel programa principal per
  * inicialitzar la cache.
  * La cache es inicialitzada al comen�ar cada un dels tests.
  * */
 void init_cache ()
 {
+	h=0;m=0;
     totaltime=0.0;
 	/* Escriu aqui el teu codi */
 	int i;
@@ -52,34 +53,24 @@ void reference (unsigned int address)
 							los bits de byte*/
 
 	struct t_linea linia = cache[linea_mc];
-	if(linia.tag == tag && linia.valid == true){ //si hay hit...
-		miss = false;
-		replacement = false;
-	}
-	else{
-		miss = true;
-		if(linia.valid == true){ //Si reemplazamos una linia valida
-			replacement = true;
+
+	miss = !linia.valid || linia.tag!=tag;
+
+	replacement = linia.valid && linia.tag !=tag;
+
+	if(miss){
+		if(replacement){ //Si reemplazamos una linia valida
 			tag_out = linia.tag;
 		}
 		else{
-			replacement = false;
 		}
 		cache[linea_mc].tag = tag;
 		cache[linea_mc].valid = true;
+		m++;
 	}
-
-
-
-
-
-
-
-
-
-
-
-
+	else{
+		h++;
+	}
 
 	/* La funcio test_and_print escriu el resultat de la teva simulacio
 	 * per pantalla (si s'escau) i comproba si hi ha algun error
@@ -95,6 +86,5 @@ void reference (unsigned int address)
 void final ()
 {
  	/* Escriu aqui el teu codi */ 
-  
-  
+	 printf("El numero de hits es: %d \nEl numero de misses es %d\n", h, m);
 }

@@ -1,4 +1,5 @@
 #include "CacheSim.h"
+#include <stdio.h>
 
 /* Posa aqui les teves estructures de dades globals
  * per mantenir la informacio necesaria de la cache
@@ -17,7 +18,7 @@
 
  struct t_set cache[64];
 
-
+int h; int m;
 
 
 /* La rutina init_cache es cridada pel programa principal per
@@ -26,6 +27,7 @@
  * */
 void init_cache ()
 {
+	h=0;m=0;
     totaltime=0.0;
 	/* Escriu aqui el teu codi */
 	int i=0;
@@ -57,7 +59,10 @@ void reference (unsigned int address)
 	bloque_m = address >> 5;
 	byte = (address & 0x1F);
 
+
 	struct t_set set = cache[conj_mc];
+	miss = set.lruSize == 0 || (set.lruSize== 1 && set.via[0].tag != tag) || (set.via[0].tag != tag && set.via[1].tag != tag); 
+	replacement = (set.lruSize == 2) && miss;
 	//No estoy orgulloso del "algoritmo" que viene a continuacion
 
 	if(set.lruSize == 0){ //Primer acceso a ese set, va a la via 0
@@ -67,38 +72,27 @@ void reference (unsigned int address)
 
 		cache[conj_mc].via[0].tag = tag;
 		cache[conj_mc].via[0].valid = true;
-
-		miss = true;
-		replacement = false;
 	}
 	else if(set.lruSize == 1){ //Si hemos usado solo un set
 		if(cache[conj_mc].via[0].tag == tag){//si estaba ya en la via 0
 			via_mc = 0;
 			cache[conj_mc].lastUsed = 0;
-			miss = false;
-			replacement = false;
 		}
 		else{ //No estara en la via 1 ya que solo habiamos usado un set
 			via_mc = 1;
-			miss = true;
 			cache[conj_mc].lruSize++;
 			cache[conj_mc].lastUsed = 1;
 			cache[conj_mc].via[1].tag = tag;
-			replacement = false;
 		}
 	}
 	else{
 		if(cache[conj_mc].via[0].tag == tag){
 			cache[conj_mc].lastUsed = 0;
-			miss = false;
 			via_mc = 0;
-			replacement = false;
 		}
 		else if(cache[conj_mc].via[1].tag == tag){
 			cache[conj_mc].lastUsed = 1;
-			miss = false;
 			via_mc = 1;
-			replacement = false;
 		}
 		else{
 			/*Si habiamos usado la via 1 recientemente
@@ -106,8 +100,6 @@ void reference (unsigned int address)
 			via_mc = 1 - cache[conj_mc].lastUsed;
 			cache[conj_mc].lastUsed = via_mc;
 
-			miss = true;
-			replacement = true;
 			tag_out = cache[conj_mc].via[via_mc].tag;
 			cache[conj_mc].via[via_mc].tag = tag;
 		}
@@ -117,6 +109,8 @@ void reference (unsigned int address)
 	 * per pantalla (si s'escau) i comproba si hi ha algun error
 	 * per la referencia actual. Tamb� mesurem el temps d'execuci�
 	 * */
+
+	if(miss) m++; else h++;
 	t2=GetTime();
 	totaltime+=t2-t1;
 	test_and_print2 (address, byte, bloque_m, conj_mc, via_mc, tag,
@@ -127,6 +121,6 @@ void reference (unsigned int address)
 void final ()
 {
  	/* Escriu aqui el teu codi */ 
-  
+	 printf("El numero de hits es: %d \nEl numero de misses es %d\n", h, m);
   
 }
