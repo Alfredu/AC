@@ -25,7 +25,7 @@ void init_cache ()
 	int i;
 	for(i=0; i<128;i++){
 		cache[i].valid = false;
-		cache[i].dirty = 0;
+		cache[i].dirty = false;
 	}
 
 
@@ -59,16 +59,27 @@ void reference (unsigned int address, unsigned int LE)
 
 	miss = !cache[linea_mc].valid || cache[linea_mc].tag!=tag;
 
-	cache[linea_mc].dirty = LE && !miss;
-
-	lec_mp = (miss && !LE) || (LE && miss);
-
 	replacement = cache[linea_mc].valid && miss;
+
+	lec_mp = miss;
+
+	cache[linea_mc].dirty = (LE && !miss) || cache[linea_mc].dirty;
 
 	esc_mp = replacement && cache[linea_mc].dirty;
 	
-	mida_lec_mp = 32*miss;
-	mida_esc_mp = esc_mp*32;
+	mida_lec_mp = 32 * lec_mp;	
+	mida_esc_mp = 32 * esc_mp;
+
+	if(miss){
+		if(replacement){
+			tag_out = cache[linea_mc].tag;
+		}
+			cache[linea_mc].valid = true;
+			cache[linea_mc].dirty = LE;
+			cache[linea_mc].tag = tag;
+	}
+
+	m+=miss; h+=1-miss;
 	
 	
 
@@ -86,6 +97,7 @@ void reference (unsigned int address, unsigned int LE)
 void final ()
 {
  	/* Escriu aqui el teu codi */ 
+	printf("Numero de hits: %d\nNumero de miss: %d\n", h,m);
   
   
 }

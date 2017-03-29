@@ -3,6 +3,7 @@
 
 #define lectura 0
 #define escriptura 1
+#include <stdio.h>
 
 void test_and_print (
 		unsigned int address,

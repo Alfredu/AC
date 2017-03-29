@@ -94,6 +94,7 @@ void reference (unsigned int address, unsigned int LE)
 void final ()
 {
  	/* Escriu aqui el teu codi */ 
-  
+  	printf("Numero de hits: %d\nNumero de miss: %d\n", h,m);
+
   
 }
