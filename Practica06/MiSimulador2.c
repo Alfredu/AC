@@ -79,7 +79,7 @@ void reference (unsigned int address, unsigned int LE)
 			cache[linea_mc].tag = tag;
 	}
 
-	m+=miss; h+=1-miss;
+	if(miss) m++; else h++;
 	
 	
 

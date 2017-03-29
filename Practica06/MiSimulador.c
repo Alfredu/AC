@@ -74,8 +74,8 @@ void reference (unsigned int address, unsigned int LE)
 		if(lec_mp){
 			cache[linea_mc].tag = tag;
 			cache[linea_mc].valid = true;
-			m++;
 		}
+		m++;
 	}
 	else{
 		h++;
