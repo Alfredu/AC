@@ -77,11 +77,11 @@ void procesar(unsigned char *mata, unsigned char *matb, int n);
 float GetTime();
 
 void main() {
-  float t1, t2;
-  unsigned char mat1[N][N];
+  float t1, t2,t3,t4;
+  unsigned char mat1[N][N] __attribute__((aligned(16)));
   int i;
   char tonto;
-  unsigned char mat2[N][N];
+  unsigned char mat2[N][N] __attribute__((aligned(16)));
   tinfo_fichero info;
     
   // Podeis crear mas contadores de tiempo o mover los que ya hay
@@ -89,9 +89,10 @@ void main() {
   
   leer(mat1,"in.pgm",&info);
   
+  t3 = GetTime();
   for (i=0;i<M;i++)  
     procesar(&mat1[0][0],&mat2[0][0],N);
-  
+  t4 = GetTime();
   escribir(mat2,"out2.pgm",info);
   
   // Esta es la unica invocacion a la rutina "PierdeTiempo"
@@ -99,5 +100,6 @@ void main() {
   
   t2 = GetTime();
   printf("Milisegundos = %9f\n\n", t2 - t1);
+  printf("Procesar = %9f\n\n", t4-t3);
 
 }

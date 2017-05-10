@@ -17,9 +17,15 @@ procesar:
 	movl 16(%ebp), %edi
 	imul %edi, %edi
 	movl $0, %ecx # ecx <- i
-	for:
+	
+	movl %eax, %esi
+	and $15, %esi
+	cmpl $0, %esi
+	jne forual
+
+	foral:
 		cmpl %edi, %ecx
-		jge fifor
+		jge fiforal
 		movl $0, %esi
 		movdqa (%eax, %ecx), %xmm1
 		suma:
@@ -31,7 +37,25 @@ procesar:
 		fisuma:
 			movdqa %xmm1, (%ebx, %ecx)
 			addl $16, %ecx
-			jmp for
+			jmp foral
+	fiforal:
+		jmp fifor
+
+	forual:
+		cmpl %edi, %ecx
+		jge fifor
+		movl $0, %esi
+		movdqu (%eax, %ecx), %xmm1
+		suma:
+			cmpl $4, %esi
+			jge fisuma
+			paddb %xmm1, %xmm1
+			incl %esi
+			jmp suma
+		fisuma:
+			movdqu %xmm1, (%ebx, %ecx)
+			addl $16, %ecx
+			jmp forual
 	fifor:
 
 

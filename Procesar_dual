@@ -2,7 +2,6 @@
 	.align 4
 	.globl procesar
 	.type	procesar, @function
-	.data
 
 procesar:
 	pushl	%ebp
@@ -13,23 +12,35 @@ procesar:
 	pushl	%edi
 
 # Aqui has de introducir el codigo
-	movl $0, %ecx # ecx <- i
 	movl 8(%ebp), %eax
-	movl 12(%ebp), %ebx # mata y matb en eax y ebx
+	movl 12(%ebp), %ebx
 	movl 16(%ebp), %edi
-	imul %edi, %edi # <- n²
-	for:	cmpl %edi, %ecx
-			jge fifor
-			movl (%eax, %ecx), %edx
-			shl $4, %edx 
-			movb %dl, (%ebx, %ecx)
-			incl %ecx
+	imul %edi, %edi
+	movl $0, %ecx # ecx <- i
+	for:
+		cmpl %edi, %ecx
+		jge fifor
+		movl $0, %esi
+		movdqu (%eax, %ecx), %xmm1
+		suma:
+			cmpl $4, %esi
+			jge fisuma
+			paddb %xmm1, %xmm1
+			incl %esi
+			jmp suma
+		fisuma:
+			movdqu %xmm1, (%ebx, %ecx)
+			addl $16, %ecx
 			jmp for
 	fifor:
 
 
+
+
+
 # El final de la rutina ya esta programado
 
+	emms	# Instruccion necesaria si os equivocais y usais MMX
 	popl	%edi
 	popl	%esi
 	popl	%ebx
