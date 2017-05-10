@@ -2,6 +2,9 @@
 	.align 4
 	.globl procesar
 	.type	procesar, @function
+.data
+zeros: .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+
 procesar:
 	pushl	%ebp
 	movl	%esp, %ebp
@@ -11,6 +14,31 @@ procesar:
 	pushl	%edi
 
 # Aqui has de introducir el codigo
+	movl 8(%ebp), %eax
+	movl 12(%ebp), %ebx
+	movl 16(%ebp), %edi
+	imul %edi, %edi
+	movl $0, %ecx # ecx <- i
+	for:
+		cmpl %edi, %ecx
+		jge fifor
+		movdqu zeros, %xmm0
+		movl $0, %esi
+		movdqu (%eax, %ecx), %xmm1
+		suma:
+			cmpl $16, %esi
+			jge fisuma
+			paddb %xmm1, %xmm0
+			incl %esi
+			jmp suma
+		fisuma:
+			movdqu %xmm0, (%ebx, %ecx)
+			addl $16, %ecx
+			jmp for
+	fifor:
+
+
+
 
 
 # El final de la rutina ya esta programado
