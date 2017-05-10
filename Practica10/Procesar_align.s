@@ -20,6 +20,7 @@ procesar:
 	for:
 		cmpl %edi, %ecx
 		jge fifor
+		movdqu zeros, %xmm0
 		movl $0, %esi
 		movdqu (%eax, %ecx), %xmm1
 		suma:

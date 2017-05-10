@@ -92,7 +92,7 @@ void main() {
   for (i=0;i<M;i++)  
     procesar(&mat1[0][0],&mat2[0][0],N);
   
-  escribir(mat2,"out.pgm",info);
+  escribir(mat2,"out2.pgm",info);
   
   // Esta es la unica invocacion a la rutina "PierdeTiempo"
   printf("Pierdo algo de tiempo mientras calculo el numero: %ld\n",pierdetiempo(PT));
