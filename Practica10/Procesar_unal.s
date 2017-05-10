@@ -3,6 +3,7 @@
 	.globl procesar
 	.type	procesar, @function
 .data
+.align 16
 zeros: .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 
 procesar:
