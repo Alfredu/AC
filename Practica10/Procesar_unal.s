@@ -26,13 +26,13 @@ procesar:
 		movl $0, %esi
 		movdqu (%eax, %ecx), %xmm1
 		suma:
-			cmpl $16, %esi
+			cmpl $4, %esi
 			jge fisuma
-			paddb %xmm1, %xmm0
+			paddb %xmm1, %xmm1
 			incl %esi
 			jmp suma
 		fisuma:
-			movdqu %xmm0, (%ebx, %ecx)
+			movdqu %xmm1, (%ebx, %ecx)
 			addl $16, %ecx
 			jmp for
 	fifor:
